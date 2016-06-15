@@ -1,4 +1,4 @@
-package jfxtreeview;
+package Mytube.client;
 
 public class TreeItemData {
 	private final String name;	

@@ -1,4 +1,4 @@
-package jfxtreeview;
+package Mytube.client;
 
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
