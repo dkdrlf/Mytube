@@ -5,51 +5,38 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.util.Callback;
 
-/**
- *JavaFXの{@link javafx.scene.control.TreeView}を制御するコントローラです。
- */
 public class TreeViewController {
+	
 	/**
-	 *コンストラクタです。
-	 *@param treeview {@link javafx.scene.control.TreeView}オブジェクト
-	 *@param prop {@link TreeViewConfiguration}オブジェクト
+	 * 트리뷰 셋팅 
+	 * @param treeview = fxml에서 생성한 트리뷰
 	 */
 	public TreeViewController(TreeView<TreeItemData> treeview) {
-		//TreeViewのモデル(TreeItem)を構築する
+		//트리뷰 폴더 생성
 		final TreeItem<TreeItemData> rootNode = new TreeItem<>(new TreeItemData("Root", TreeItemData.Type.GROUP));
 		final TreeItem<TreeItemData> node0 = new TreeItem<>(new TreeItemData("교육", TreeItemData.Type.GROUP));
 		final TreeItem<TreeItemData> node1 = new TreeItem<>(new TreeItemData("K-POP", TreeItemData.Type.GROUP));
 		final TreeItem<TreeItemData> node2 = new TreeItem<>(new TreeItemData("여행", TreeItemData.Type.GROUP));
-		rootNode.setExpanded(true);
+		rootNode.setExpanded(true); //ture 폴더가 펼친형태 근대 안먹힘 
 		rootNode.getChildren().add(node0);
 		rootNode.getChildren().add(node1);
 		rootNode.getChildren().add(node2);
 		
+		//트리뷰 폴더에 항목생성
 		for(int i=0; i<10; i++){
 			node0.getChildren().add(new TreeItem<>(new TreeItemData("Node0"+i)));
 			node1.getChildren().add(new TreeItem<>(new TreeItemData("Node1"+i)));
 			node2.getChildren().add(new TreeItem<>(new TreeItemData("Node2"+i)));
 		}
 		
-		//TreeItemのルートをTreeViewに設定する
 		treeview.setRoot(rootNode);
-		//独自TreeCellを生成するクラスを設定する
 		treeview.setCellFactory(new TreeViewCellFactory());
 	}
 
-	/**
-	 *TreeItemのデータ名が変更されたときに呼び出されます。
-	 *@param treeItem データ名が変更されたTreeItem
-	 *@param name 新しいデータ名
-	 *@return 新しいデータ名を反映したTreeItem (データ名の変更をキャンセルする場合はnullを返す)
-	 */
 	protected TreeItemData treeItemDataRenamed(TreeItem<TreeItemData> treeItem, String name){
 		return new TreeItemData(name, treeItem.getValue().getType());
 	}
 
-	/**
-	 *独自のTreeCellを生成するファクトリクラスです。
-	 */
 	final class TreeViewCellFactory implements Callback<TreeView<TreeItemData>,TreeCell<TreeItemData>> {
 		@Override
 		public TreeCell<TreeItemData> call(TreeView<TreeItemData> treeview){

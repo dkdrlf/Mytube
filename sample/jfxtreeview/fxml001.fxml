@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <left>
     <TreeView fx:id="treeview" editable="true" prefHeight="200.0" prefWidth="200.0" showRoot="false" />
   </left>
@@ -25,6 +25,7 @@
                </font>
             </Label>
             <Label layoutY="28.0" prefHeight="19.0" prefWidth="71.0" text="My labrary" />
+            <Label layoutX="209.0" layoutY="27.0" prefHeight="21.0" prefWidth="74.0" text="My video" />
          </children>
       </AnchorPane>
    </top>

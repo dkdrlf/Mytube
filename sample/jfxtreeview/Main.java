@@ -18,10 +18,10 @@ public final class Main extends Application {
 	@Override
 	public void start(final Stage stage) {
 		try {
-			//ウィンドウのアイコンを設定
 			final Image img16 = new Image(getClass().getResourceAsStream("treeviewsample16.jpg"));
 			final Image img32 = new Image(getClass().getResourceAsStream("treeviewsample32.jpg"));
-			//GUI構築
+			
+			//GUI
 			final Pane root = (Pane)FXMLLoader.load(this.getClass().getResource("fxml001.fxml"));
 			this.controller =new TreeViewController((TreeView<TreeItemData>)root.lookup("#treeview"));
 			stage.setScene(new Scene(root));
