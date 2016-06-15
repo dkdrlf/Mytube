@@ -1,5 +1,8 @@
 package Mytube.client;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +15,12 @@ public final class Main extends Application {
 	private TreeViewController controller;
 
 	public static void main(String[] args) {
+		try {
+			Socket socket=new Socket("localhost", 8080);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Application.launch(args);
 	}
 
