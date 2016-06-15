@@ -16,7 +16,7 @@ public final class Main extends Application {
 
 	public static void main(String[] args) {
 		try {
-			Socket socket=new Socket("localhost", 8080);
+			Socket socket=new Socket("localhost", 18080);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

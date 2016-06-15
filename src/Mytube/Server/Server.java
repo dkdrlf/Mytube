@@ -12,7 +12,7 @@ public class Server {
 	public Server(){
 		ServerSocket server;
 		try {
-			server = new ServerSocket(8080);
+			server = new ServerSocket(18080);
 			while(true){
 				Socket client = server.accept();
 				new ServerManager(client);
