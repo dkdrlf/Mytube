@@ -30,17 +30,6 @@ public class TreeViewController {
 		}
 		
 		treeview.setRoot(rootNode);
-		treeview.setCellFactory(new TreeViewCellFactory());
 	}
 
-	protected TreeItemData treeItemDataRenamed(TreeItem<TreeItemData> treeItem, String name){
-		return new TreeItemData(name, treeItem.getValue().getType());
-	}
-
-	final class TreeViewCellFactory implements Callback<TreeView<TreeItemData>,TreeCell<TreeItemData>> {
-		@Override
-		public TreeCell<TreeItemData> call(TreeView<TreeItemData> treeview){
-			return new TreeCellImpl(TreeViewController.this);
-		}
-	}
 }

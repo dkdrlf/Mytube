@@ -25,7 +25,7 @@ public final class Main extends Application {
 			final Pane root = (Pane)FXMLLoader.load(this.getClass().getResource("fxml001.fxml"));
 			this.controller =new TreeViewController((TreeView<TreeItemData>)root.lookup("#treeview"));
 			stage.setScene(new Scene(root));
-			stage.setTitle("TreeView Sample");
+			stage.setTitle("MyTube");
 			stage.getIcons().addAll(img16, img32);
 			stage.show();
 		} catch (Exception e) {
