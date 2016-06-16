@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import com.sun.corba.se.impl.orbutil.RepositoryIdUtility;
 
+import Mytube.vo.myLibrary;
+
 
 
 public class database {
@@ -59,8 +61,8 @@ public class database {
 	 * 검색어를 통한 검색 메소드 제목들을 검색
 	 * @param text : 검색어
 	 */
-	public ArrayList<String> searchTube(String text){
-		ArrayList<String> result=null;
+	public ArrayList<myLibrary> searchTube(String text){
+		ArrayList<myLibrary> result=null;
 
 		String sql = "select * from tube where title = '%?%'";
 		ConnectionManager cm = ConnectionManager.getInstance();
@@ -72,7 +74,8 @@ public class database {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				String title = rs.getString("title");
-				result.add(title);
+				int category = rs.getInt("category");
+				result.add(new myLibrary(category,title));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

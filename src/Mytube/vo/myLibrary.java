@@ -8,6 +8,11 @@ public class myLibrary {
 	static final public int KPOP=10;
 	static final public int TRAVEL=10;
 	
+	public myLibrary(int category, String title){
+		this.category = category;
+		this.title = title;
+	}
+	
 	public int getCategory() {
 		return category;
 	}

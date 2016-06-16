@@ -10,13 +10,20 @@ public class Command implements Serializable{
 
 	private String title;
 	private String url;
-	private String category;
+	private int category;
 	private int satatus;
+	private String contents;
+	
 	ArrayList<myLibrary> alist=new ArrayList<>();
 	
-	static final public int FIND=10;
-	static final public int delete=20;
-	static final public int store=30;
+	static final public int FIND=20;
+	static final public int DELETE=30;
+	static final public int SAVE=10;
+	
+	public Command(int status){
+		this.satatus = status;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -29,10 +36,10 @@ public class Command implements Serializable{
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getCategory() {
+	public int getCategory() {
 		return category;
 	}
-	public void setCategory(String category) {
+	public void setCategory(int category) {
 		this.category = category;
 	}
 	public int getSatatus() {
@@ -48,7 +55,12 @@ public class Command implements Serializable{
 		this.alist = alist;
 	}
 	
-	
+	public String getContents(){
+		return contents;
+	}
+	public void setContents(String contents){
+		this.contents = contents;
+	}
 	
 	
 	
