@@ -1,14 +1,18 @@
 package Mytube.vo;
 
 public class myLibrary {
-	private int categort;
+	private int category;
 	private String title;
 	
-	public int getCategort() {
-		return categort;
+	static final public int EDUCATION=10;
+	static final public int KPOP=10;
+	static final public int TRAVEL=10;
+	
+	public int getCategory() {
+		return category;
 	}
-	public void setCategort(int categort) {
-		this.categort = categort;
+	public void setCategory(int category) {
+		this.category = category;
 	}
 	public String getTitle() {
 		return title;

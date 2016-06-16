@@ -18,14 +18,14 @@ public class ConnectionManager {
 			e.printStackTrace();
 		}
 	}
-	public ConnectionManager getInstance(){
+	public static ConnectionManager getInstance(){
 		return cm;
 	}
 	private ConnectionManager() {}
 	
-	public void Connection()
+	public Connection getConnection()
 	{
-		Connection con;
+		Connection con=null;
 		
 		try {
 			con=DriverManager.getConnection(url, user, password);
@@ -33,8 +33,9 @@ public class ConnectionManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return con;
 	}
-	public void close(Connection con)
+	public static void close(Connection con)
 	{
 		try {
 			if(con!=null)
