@@ -55,6 +55,7 @@ public class ServerManager implements Runnable {
 				case Command.DELETE:
 					resultCmd = new Command(Command.DELETE);
 					resultCmd.setResult(dao.deleteTube(cmd.getTitle()));
+					resultCmd.setTitle(cmd.getTitle());
 					sendData(resultCmd);
 					break;
 				case Command.SHOWALLTUBE:

@@ -27,6 +27,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
@@ -110,9 +111,16 @@ public class UIController implements Initializable, Runnable{
 	}
 	public void delete(ActionEvent e)
 	{
-		//treecontrol.getRootNode().getChildren().se
-		System.out.println("델리트");
-	
+		TreeView<String >t=treecontrol.getTreeview();
+		String s=t.getSelectionModel().getSelectedItem().getValue();
+		Command c=new Command(Command.DELETE);
+		c.setTitle(s);
+		try {
+			oos.writeObject(c);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	public void insert(ActionEvent e)
 	{
@@ -186,20 +194,32 @@ public class UIController implements Initializable, Runnable{
 					}
 					case Command.DELETE:
 					{
+						treecontrol.getRootNode().getChildren().clear();
 						
+						TreeItem<String> node0 = new TreeItem<String>("교육"); 
+						TreeItem<String> node1 = new TreeItem<String>("K-POP");
+						TreeItem<String> node2 = new TreeItem<String>("여행");
+						treecontrol.getRootNode().getChildren().add(node0);
+						treecontrol.getRootNode().getChildren().add(node1);
+						treecontrol.getRootNode().getChildren().add(node2);
+						TreeItem<String> ti = new TreeItem<String>("테스트");
+						treecontrol.getNode1().getChildren().add(ti);
 						break;
 					}
 					case Command.SHOWALLTUBE:
 					{
+						System.out.println("쇼올 드러옴");
 						ArrayList<myLibrary>al=new ArrayList<>();
 						al=cmd.getAlist();
+						System.out.println(al.toString());
 						for(myLibrary m:al)
 						{
 							if(m.getCategory()==myLibrary.EDUCATION)
 							{
 								System.out.println("education");
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
-								treecontrol.getNode0().getChildren().add(ti);
+								System.out.println("에듀케이션 카테고리"+treecontrol.getNode0());
+								//treecontrol.getNode0().getChildren().add(ti);
 							}
 							else if(m.getCategory()==myLibrary.KPOP)
 							{	System.out.println("kop");

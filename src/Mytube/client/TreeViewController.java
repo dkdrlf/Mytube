@@ -10,6 +10,7 @@ import javafx.util.Callback;
 
 public class TreeViewController {
 	
+	private TreeView<String> treeview;
 	private TreeItem<String> rootNode;
 	private TreeItem<String> node0;
 	private TreeItem<String> node1;
@@ -18,8 +19,10 @@ public class TreeViewController {
 	 * 트리뷰 셋팅 
 	 * @param treeview = fxml에서 생성한 트리뷰
 	 */
+	
 	public TreeViewController(TreeView<String> treeview) {
 		//트리뷰 폴더 생성
+		this.treeview=treeview;
 		rootNode = new TreeItem<>();
 		node0 = new TreeItem<String>("교육"); 
 		node1 = new TreeItem<String>("K-POP");
@@ -30,6 +33,10 @@ public class TreeViewController {
 		rootNode.getChildren().add(node2);
 		
 		treeview.setRoot(rootNode);
+	}
+	
+	public TreeView<String> getTreeview() {
+		return treeview;
 	}
 	public TreeItem<String> getRootNode() {
 		return rootNode;
