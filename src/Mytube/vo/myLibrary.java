@@ -1,8 +1,10 @@
 package Mytube.vo;
 
+import java.io.Serializable;
+
 import Mytube.client.TreeItemData.Type;
 
-public class myLibrary {
+public class myLibrary implements Serializable{
 	private int category;
 	private String title;
 	
