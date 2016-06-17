@@ -21,7 +21,8 @@ public class database {
 	 * @param title 동영상 제목
 	 * @param url 동영상의 유튜브 url 주소
 	 */
-	public void insertTube(int category, String title, String url){
+	public boolean insertTube(int category, String title, String url){
+		boolean result =false;
 		String sql = "insert into tube values(seq_num.nextval,?,?,?)";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
@@ -32,17 +33,20 @@ public class database {
 			pstmt.setString(3, url);
 			pstmt.executeUpdate();
 			System.out.println("삽입 완료");
+			result = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cm.close(con);
 		}
+		return result;
 	}
 	/**
 	 * DB에서 제목을 통한 삭제를 위한 메소드
 	 * @param title : 동영상 제목
 	 */
-	public void deleteTube(String title){
+	public boolean deleteTube(String title){
+		boolean result = false;
 		String sql = "delete from tube where title = ?";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
@@ -51,15 +55,18 @@ public class database {
 			pstmt.setString(1, title);
 			pstmt.executeUpdate();
 			System.out.println("삭제 성공");
+			result = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			cm.close(con);
 		}
+		return result;
 	}
 	/**
 	 * 검색어를 통한 검색 메소드 제목들을 검색
 	 * @param text : 검색어
+	 * @return 검색결과 리스트를 보내주기
 	 */
 	public ArrayList<myLibrary> searchTube(String text){
 		ArrayList<myLibrary> result=null;
@@ -88,7 +95,7 @@ public class database {
 	/**
 	 * 제목을 검색하여 url 정보를 가지고 옴.
 	 * @param title
-	 * @return
+	 * @return url 정보를 넘겨줌
 	 */
 	public String showTube(String title){
 		String address=null;
@@ -108,6 +115,32 @@ public class database {
 			cm.close(con);
 		}
 		return address;
+	}
+	/**
+	 * DB에 있는 모든 객체들을 가지고옴.
+	 * @return myLibrary가 담겨있는 arraylist를 보내기.
+	 */
+	public ArrayList<myLibrary> showAllTube(){
+		ArrayList<myLibrary> allList = null;
+		String sql = "select * from tube";
+		ConnectionManager cm = ConnectionManager.getInstance();
+		Connection con = cm.getConnection();
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()){
+				int category = rs.getInt("category");
+				String title = rs.getString("title");
+				allList.add(new myLibrary(category, title));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			cm.close(con);
+		}
+		return allList;
 	}
 	
 }
