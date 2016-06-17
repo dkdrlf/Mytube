@@ -52,11 +52,17 @@ public class UIController implements Initializable, Runnable{
 	TreeViewController treecontrol;
 	Parent parent=null;
 	Stage dialog;
+	TreeItem<String> node0;
+	TreeItem<String> node1;
+	TreeItem<String> node2;
 	public TreeViewController getTreecontrol() {
 		return treecontrol;
 	}
 	public void setTreecontrol(TreeViewController treecontrol) {
 		this.treecontrol = treecontrol;
+		this.node0=this.treecontrol.getNode0();
+		this.node1=this.treecontrol.getNode1();
+		this.node2=this.treecontrol.getNode2();
 	}
 	public Socket getSocket() {
 		return socket;
@@ -67,6 +73,7 @@ public class UIController implements Initializable, Runnable{
 			oos=new ObjectOutputStream(socket.getOutputStream());
 			ois=new ObjectInputStream(socket.getInputStream());
 			ThreadStart();
+			//Command c=new Command(Command.SHOWALLTUBE);
 			Command c=new Command(Command.SHOWALLTUBE);
 			sendData(c);
 		} catch (IOException e) {
@@ -173,17 +180,17 @@ public class UIController implements Initializable, Runnable{
 						{
 							System.out.println("education");
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
-							treecontrol.getNode0().getChildren().add(ti);
+							node0.getChildren().add(ti);
 						}
 						else if(cmd.getCategory()==myLibrary.KPOP)
 						{	System.out.println("kop");
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
-							treecontrol.getNode1().getChildren().add(ti);
+							node1.getChildren().add(ti);
 						}
 						else if(cmd.getCategory()==myLibrary.TRAVEL)
 						{	System.out.println("travel");
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
-							treecontrol.getNode2().getChildren().add(ti);
+							node2.getChildren().add(ti);
 							
 						}
 						break;
@@ -196,16 +203,48 @@ public class UIController implements Initializable, Runnable{
 					{
 						treecontrol.getRootNode().getChildren().clear();
 						
-						TreeItem<String> node0 = new TreeItem<String>("교육"); 
-						TreeItem<String> node1 = new TreeItem<String>("K-POP");
-						TreeItem<String> node2 = new TreeItem<String>("여행");
+						node0 = new TreeItem<String>("교육"); 
+						node1 = new TreeItem<String>("K-POP");
+						node2 = new TreeItem<String>("여행");
 						treecontrol.getRootNode().getChildren().add(node0);
 						treecontrol.getRootNode().getChildren().add(node1);
 						treecontrol.getRootNode().getChildren().add(node2);
-						TreeItem<String> ti = new TreeItem<String>("테스트");
-						treecontrol.getNode1().getChildren().add(ti);
+						
+						Command c=new Command(Command.SHOWALLTUBE);
+						oos.writeObject(c);
+						oos.reset();
+						
 						break;
 					}
+					
+					case Command.SHOWALLTUBE:
+					{
+						System.out.println("딜리트쇼올 드러옴");
+						ArrayList<myLibrary>al=new ArrayList<>();
+						al=cmd.getAlist();
+						System.out.println(al.toString());
+						for(myLibrary m:al)
+						{
+							if(m.getCategory()==myLibrary.EDUCATION)
+							{
+								System.out.println("education");
+								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
+								node0.getChildren().add(ti);
+							}
+							else if(m.getCategory()==myLibrary.KPOP)
+							{	System.out.println("kop");
+								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
+								node1.getChildren().add(ti);
+							}
+							else if(m.getCategory()==myLibrary.TRAVEL)
+							{	System.out.println("travel");
+								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
+								node2.getChildren().add(ti);
+							}
+						}
+						break;
+					}
+					/*
 					case Command.SHOWALLTUBE:
 					{
 						System.out.println("쇼올 드러옴");
@@ -219,7 +258,7 @@ public class UIController implements Initializable, Runnable{
 								System.out.println("education");
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								System.out.println("에듀케이션 카테고리"+treecontrol.getNode0());
-								//treecontrol.getNode0().getChildren().add(ti);
+								treecontrol.getNode0().getChildren().add(ti);
 							}
 							else if(m.getCategory()==myLibrary.KPOP)
 							{	System.out.println("kop");
@@ -234,6 +273,7 @@ public class UIController implements Initializable, Runnable{
 						}
 						break;
 					}
+					*/
 				}
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
