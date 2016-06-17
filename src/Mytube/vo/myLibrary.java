@@ -9,8 +9,8 @@ public class myLibrary implements Serializable{
 	private String title;
 	
 	static final public int EDUCATION=10;
-	static final public int KPOP=10;
-	static final public int TRAVEL=10;
+	static final public int KPOP=20;
+	static final public int TRAVEL=30;
 	
 	public myLibrary(int category, String title){
 		this.category = category;

@@ -21,6 +21,7 @@ public class Command implements Serializable{
 	static final public int FIND=20;
 	static final public int DELETE=30;
 	static final public int SAVE=10;
+	static final public int SHOWALLTUBE=40;
 	
 	public Command(int status){
 		this.satatus = status;

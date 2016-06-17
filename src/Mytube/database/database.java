@@ -121,7 +121,7 @@ public class database {
 	 * @return myLibrary가 담겨있는 arraylist를 보내기.
 	 */
 	public ArrayList<myLibrary> showAllTube(){
-		ArrayList<myLibrary> allList = null;
+		ArrayList<myLibrary> allList = new ArrayList<>();
 		String sql = "select * from tube";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
