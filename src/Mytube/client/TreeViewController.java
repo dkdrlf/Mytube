@@ -35,13 +35,6 @@ public class TreeViewController {
 		rootNode.getChildren().add(node0);
 		rootNode.getChildren().add(node1);
 		rootNode.getChildren().add(node2);
-		
-		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
-		    handleMouseClicked(event);
-		};
- 
-		treeview.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
-		
 		this.treeview.setRoot(rootNode);
 	}
 	
@@ -60,16 +53,6 @@ public class TreeViewController {
 	}
 	public TreeItem<String> getNode2() {
 		return node2;
-	}
-	
-	private void handleMouseClicked(MouseEvent event) {
-	    Node node = event.getPickResult().getIntersectedNode();
-	    // Accept clicks only on node cells, and not on empty spaces of the TreeView
-	    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-	        String name = (String) ((TreeItem)treeview.getSelectionModel().getSelectedItem()).getValue();
-	        System.out.println("Node click: " + name);
-	    }
-	    
 	}
 }
 	

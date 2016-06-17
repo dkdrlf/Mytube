@@ -70,6 +70,12 @@ public class UIController implements Initializable, Runnable{
 		this.node1=this.treecontrol.getNode1();
 		this.node2=this.treecontrol.getNode2();
 		t=treecontrol.getTreeview();
+		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
+		    handleMouseClicked(event);
+		};
+ 
+		t.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
+		
 	}
 	public Socket getSocket() {
 		return socket;
@@ -97,6 +103,14 @@ public class UIController implements Initializable, Runnable{
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		
+	}
+	private void handleMouseClicked(MouseEvent event) {
+	    Node node = event.getPickResult().getIntersectedNode();
+	    // Accept clicks only on node cells, and not on empty spaces of the TreeView
+	    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+	        String name = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
+	        System.out.println("Node click: " + name);
+	    }
 	}
 	public void store(ActionEvent e) throws IOException
 	{
