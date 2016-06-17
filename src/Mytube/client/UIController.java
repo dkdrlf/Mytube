@@ -110,6 +110,7 @@ public class UIController implements Initializable, Runnable{
 	}
 	public void delete(ActionEvent e)
 	{
+		//treecontrol.getRootNode().getChildren().se
 		System.out.println("델리트");
 	
 	}
@@ -140,8 +141,6 @@ public class UIController implements Initializable, Runnable{
 		command.setUrl(u);
 		sendData(command);
 		dialog.close();
-		
-		
 	}
 	public void cancel(ActionEvent ee)
 	{
@@ -177,6 +176,7 @@ public class UIController implements Initializable, Runnable{
 						{	System.out.println("travel");
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
 							treecontrol.getNode2().getChildren().add(ti);
+							
 						}
 						break;
 					}
@@ -214,7 +214,6 @@ public class UIController implements Initializable, Runnable{
 						}
 						break;
 					}
-					
 				}
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
