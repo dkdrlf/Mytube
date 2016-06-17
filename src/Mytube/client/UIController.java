@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
+import com.sun.xml.internal.bind.v2.model.annotation.RuntimeAnnotationReader;
+
 import Mytube.command.Command;
 import Mytube.vo.myLibrary;
 import javafx.collections.FXCollections;
@@ -32,7 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import sun.java2d.cmm.CMSManager;
 
-public class UIController implements Initializable {
+public class UIController implements Initializable, Runnable{
 
 	private Stage primaryStage;	
 	
@@ -46,7 +48,8 @@ public class UIController implements Initializable {
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	TreeViewController treecontrol;
-	
+	Parent parent=null;
+	Stage dialog;
 	public TreeViewController getTreecontrol() {
 		return treecontrol;
 	}
@@ -80,12 +83,12 @@ public class UIController implements Initializable {
 	public void store(ActionEvent e) throws IOException
 	{
 		
-		Stage dialog = new Stage(StageStyle.UTILITY);
+		dialog = new Stage(StageStyle.UTILITY);
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.initOwner(primaryStage);
 		dialog.setTitle("Store");
 		
-		Parent parent=null;
+	
 			
 		parent = FXMLLoader.load(getClass().getResource("store.fxml"));
 		btn_insert=(Button)parent.lookup("#btn_insert");
@@ -115,7 +118,7 @@ public class UIController implements Initializable {
 	{
 		String t=title.getText();
 		String u=url.getText();
-		String c=category.getValue();
+		String c=this.category.getValue();
 		int category=0;
 		if(c.equals("교육"))
 		{
@@ -133,41 +136,75 @@ public class UIController implements Initializable {
 		command.setCategory(category);
 		command.setTitle(t);
 		command.setUrl(u);
-		try {
-			oos.writeObject(command);
-			oos.reset();
-			Command cmd=(Command)ois.readObject();
-			if(cmd.getCategory()==myLibrary.EDUCATION)
-			{
-				TreeItem<String> ti = new TreeItem<String>(command.getTitle());
-				treecontrol.getNode0().getChildren().add(ti);
-				String url=command.getUrl();
-			}
-			else if(cmd.getCategory()==myLibrary.KPOP)
-			{
-				TreeItem<String> ti = new TreeItem<String>(command.getTitle());
-				treecontrol.getNode1().getChildren().add(ti);
-				String url=command.getUrl();
-			}
-			else if(cmd.getCategory()==myLibrary.TRAVEL)
-			{
-				TreeItem<String> ti = new TreeItem<String>(command.getTitle());
-				treecontrol.getNode2().getChildren().add(ti);
-				String url=command.getUrl();
-			}
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		sendData(command);
+		
 	}
 	public void cancel(ActionEvent ee)
 	{
 		System.out.println("cancel");
 	}
-	
+	public void ThreadStart(){
+		Thread t1 = new Thread(this);
+		t1.start();
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true){
+			try {
+				Command cmd=(Command)ois.readObject();
+				switch(cmd.getSatatus())
+				{
+					case Command.SAVE:
+					{
+						if(cmd.getCategory()==myLibrary.EDUCATION)
+						{
+							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
+							treecontrol.getNode0().getChildren().add(ti);
+						}
+						else if(cmd.getCategory()==myLibrary.KPOP)
+						{
+							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
+							treecontrol.getNode1().getChildren().add(ti);
+						}
+						else if(cmd.getCategory()==myLibrary.TRAVEL)
+						{
+							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
+							treecontrol.getNode2().getChildren().add(ti);
+						}
+						dialog.close();
+						break;
+					}
+					case Command.FIND:
+					{
+						break;
+					}
+					case Command.DELETE:
+					{
+						break;
+					}
+					
+				}
+				
+				
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+	}
+	public void sendData(Command result){
+		try {
+			oos.writeObject(result);
+			oos.reset();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

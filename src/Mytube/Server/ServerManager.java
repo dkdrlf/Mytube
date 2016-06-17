@@ -35,10 +35,6 @@ public class ServerManager implements Runnable{
 			switch(cmd.getSatatus()){
 				case Command.SAVE:
 					resultCmd = new Command(Command.SAVE);
-					dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl());
-					oos.writeObject(cmd);
-					oos.reset();
-					
 					resultCmd.setResult(dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl()));
 					sendData();
 					break;
@@ -71,7 +67,7 @@ public class ServerManager implements Runnable{
 	}
 	public void sendData(){
 		try {
-			oos.writeObject(dao);
+			oos.writeObject(resultCmd);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
