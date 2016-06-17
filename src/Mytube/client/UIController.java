@@ -17,19 +17,24 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -55,6 +60,7 @@ public class UIController implements Initializable, Runnable{
 	TreeItem<String> node0;
 	TreeItem<String> node1;
 	TreeItem<String> node2;
+	TreeView<String > t;
 	public TreeViewController getTreecontrol() {
 		return treecontrol;
 	}
@@ -63,6 +69,7 @@ public class UIController implements Initializable, Runnable{
 		this.node0=this.treecontrol.getNode0();
 		this.node1=this.treecontrol.getNode1();
 		this.node2=this.treecontrol.getNode2();
+		t=treecontrol.getTreeview();
 	}
 	public Socket getSocket() {
 		return socket;
@@ -73,7 +80,6 @@ public class UIController implements Initializable, Runnable{
 			oos=new ObjectOutputStream(socket.getOutputStream());
 			ois=new ObjectInputStream(socket.getInputStream());
 			ThreadStart();
-			//Command c=new Command(Command.SHOWALLTUBE);
 			Command c=new Command(Command.SHOWALLTUBE);
 			sendData(c);
 		} catch (IOException e) {
@@ -118,7 +124,6 @@ public class UIController implements Initializable, Runnable{
 	}
 	public void delete(ActionEvent e)
 	{
-		TreeView<String >t=treecontrol.getTreeview();
 		String s=t.getSelectionModel().getSelectedItem().getValue();
 		Command c=new Command(Command.DELETE);
 		c.setTitle(s);
@@ -244,36 +249,7 @@ public class UIController implements Initializable, Runnable{
 						}
 						break;
 					}
-					/*
-					case Command.SHOWALLTUBE:
-					{
-						System.out.println("쇼올 드러옴");
-						ArrayList<myLibrary>al=new ArrayList<>();
-						al=cmd.getAlist();
-						System.out.println(al.toString());
-						for(myLibrary m:al)
-						{
-							if(m.getCategory()==myLibrary.EDUCATION)
-							{
-								System.out.println("education");
-								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
-								System.out.println("에듀케이션 카테고리"+treecontrol.getNode0());
-								treecontrol.getNode0().getChildren().add(ti);
-							}
-							else if(m.getCategory()==myLibrary.KPOP)
-							{	System.out.println("kop");
-								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
-								treecontrol.getNode1().getChildren().add(ti);
-							}
-							else if(m.getCategory()==myLibrary.TRAVEL)
-							{	System.out.println("travel");
-								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
-								treecontrol.getNode2().getChildren().add(ti);
-							}
-						}
-						break;
-					}
-					*/
+					
 				}
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block

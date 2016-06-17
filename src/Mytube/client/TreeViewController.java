@@ -1,28 +1,32 @@
 package Mytube.client;
-
+ 
 import java.net.Socket;
-
+ 
 import Mytube.vo.myLibrary;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
-
+ 
 public class TreeViewController {
 	
-	private TreeView<String> treeview;
 	private TreeItem<String> rootNode;
 	private TreeItem<String> node0;
 	private TreeItem<String> node1;
 	private TreeItem<String> node2;
+	
+	private TreeView<String> treeview;
 	/**
 	 * 트리뷰 셋팅 
 	 * @param treeview = fxml에서 생성한 트리뷰
 	 */
-	
 	public TreeViewController(TreeView<String> treeview) {
+		this.treeview = treeview;
 		//트리뷰 폴더 생성
-		this.treeview=treeview;
 		rootNode = new TreeItem<>();
 		node0 = new TreeItem<String>("교육"); 
 		node1 = new TreeItem<String>("K-POP");
@@ -32,12 +36,19 @@ public class TreeViewController {
 		rootNode.getChildren().add(node1);
 		rootNode.getChildren().add(node2);
 		
-		treeview.setRoot(rootNode);
+		EventHandler<MouseEvent> mouseEventHandle = (MouseEvent event) -> {
+		    handleMouseClicked(event);
+		};
+ 
+		treeview.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
+		
+		this.treeview.setRoot(rootNode);
 	}
 	
 	public TreeView<String> getTreeview() {
 		return treeview;
 	}
+
 	public TreeItem<String> getRootNode() {
 		return rootNode;
 	}
@@ -50,4 +61,16 @@ public class TreeViewController {
 	public TreeItem<String> getNode2() {
 		return node2;
 	}
+	
+	private void handleMouseClicked(MouseEvent event) {
+	    Node node = event.getPickResult().getIntersectedNode();
+	    // Accept clicks only on node cells, and not on empty spaces of the TreeView
+	    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+	        String name = (String) ((TreeItem)treeview.getSelectionModel().getSelectedItem()).getValue();
+	        System.out.println("Node click: " + name);
+	    }
+	    
+	}
 }
+	
+	
