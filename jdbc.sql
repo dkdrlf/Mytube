@@ -9,3 +9,5 @@ create table tube(
  	start with 10;
  	
  commit
+ 
+ delete from tube;

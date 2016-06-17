@@ -39,18 +39,20 @@ public class ServerManager implements Runnable{
 					oos.reset();
 					
 					resultCmd.setResult(dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl()));
-					sendData();
+					resultCmd.setCategory(cmd.getCategory());
+					resultCmd.setTitle(cmd.getTitle());
+					sendData(resultCmd);
 					break;
 				case Command.FIND:
 					resultCmd = new Command(Command.FIND);
 					al = dao.searchTube(cmd.getContents());
 					resultCmd.setAlist(al);
-					sendData();
+					sendData(resultCmd);
 					break;
 				case Command.DELETE :
 					resultCmd = new Command(Command.DELETE);
 					resultCmd.setResult(dao.deleteTube(cmd.getTitle()));
-					sendData();
+					sendData(resultCmd);
 					break;
 					
 			}
@@ -68,7 +70,7 @@ public class ServerManager implements Runnable{
 		Thread t1 = new Thread(this);
 		t1.start();
 	}
-	public void sendData(){
+	public void sendData(Command resultCmd){
 		try {
 			oos.writeObject(resultCmd);
 		} catch (IOException e) {
