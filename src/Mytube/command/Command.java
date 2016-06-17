@@ -13,6 +13,8 @@ public class Command implements Serializable{
 	private int category;
 	private int satatus;
 	private String contents;
+	private boolean result;
+	
 	
 	ArrayList<myLibrary> alist=new ArrayList<>();
 	
@@ -61,7 +63,11 @@ public class Command implements Serializable{
 	public void setContents(String contents){
 		this.contents = contents;
 	}
-	
-	
+	public boolean getResult(){
+		return result;
+	}
+	public void setResult(boolean result){
+		this.result = result;
+	}
 	
 }

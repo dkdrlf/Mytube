@@ -35,17 +35,19 @@ public class ServerManager implements Runnable{
 			switch(cmd.getSatatus()){
 				case Command.SAVE:
 					resultCmd = new Command(Command.SAVE);
-					dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl());
+					resultCmd.setResult(dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl()));
+					sendData();
 					break;
 				case Command.FIND:
 					resultCmd = new Command(Command.FIND);
 					al = dao.searchTube(cmd.getContents());
 					resultCmd.setAlist(al);
+					sendData();
 					break;
 				case Command.DELETE :
 					resultCmd = new Command(Command.DELETE);
-					dao.deleteTube(cmd.getTitle());
-					
+					resultCmd.setResult(dao.deleteTube(cmd.getTitle()));
+					sendData();
 					break;
 					
 			}
