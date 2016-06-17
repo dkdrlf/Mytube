@@ -30,5 +30,5 @@ public class Server {
 		// TODO Auto-generated method stub
 		new Server();
 	}
-
 }
+

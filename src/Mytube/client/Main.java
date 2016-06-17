@@ -3,6 +3,7 @@ package Mytube.client;
 import java.io.IOException;
 import java.net.Socket;
 
+import Mytube.vo.myLibrary;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,16 +16,21 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public final class Main extends Application {
-private TreeViewController controller;
-	
-	public static void main(String[] args) {
+private TreeViewController treecontrol;
+
+Socket socket;
+
+	public Main() {
+		// TODO Auto-generated constructor stub
 		try {
-			Socket socket=new Socket("localhost", 18080);
+			socket=new Socket("localhost", 18080);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public static void main(String[] args) {
 		Application.launch(args);
 	}
 
@@ -33,14 +39,15 @@ private TreeViewController controller;
 		// TODO Auto-generated method stub
 		try {
 			final Image img16 = new Image(getClass().getResourceAsStream("treeviewsample16.jpg"));
-			
 			final Image img32 = new Image(getClass().getResourceAsStream("treeviewsample32.jpg"));
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml001.fxml"));
 			Pane root =loader.load();
-			this.controller =new TreeViewController((TreeView<TreeItemData>)root.lookup("#treeview"));
+			this.treecontrol =new TreeViewController((TreeView<String>)root.lookup("#treeview"));
 			UIController controller = loader.getController();
 			controller.setPrimaryStage(primaryStage);
+			controller.setSocket(socket);
+			controller.setTreecontrol(treecontrol);
 			
 			primaryStage.setScene(new Scene(root));
 			primaryStage.setTitle("MyTube");

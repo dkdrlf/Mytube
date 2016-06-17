@@ -1,5 +1,7 @@
 package Mytube.vo;
 
+import Mytube.client.TreeItemData.Type;
+
 public class myLibrary {
 	private int category;
 	private String title;
@@ -25,6 +27,12 @@ public class myLibrary {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "myLibrary [category=" + category + ", title=" + title + "]";
+	}
+	
+	
 }
+

@@ -1,9 +1,15 @@
 package Mytube.client;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
+import Mytube.command.Command;
+import Mytube.vo.myLibrary;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,12 +23,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sun.java2d.cmm.CMSManager;
 
 public class UIController implements Initializable {
 
@@ -34,7 +42,30 @@ public class UIController implements Initializable {
 	@FXML Button btn_store;
 	@FXML Button btn_delete;
 	Button btn_insert;
+	Socket socket;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
+	TreeViewController treecontrol;
 	
+	public TreeViewController getTreecontrol() {
+		return treecontrol;
+	}
+	public void setTreecontrol(TreeViewController treecontrol) {
+		this.treecontrol = treecontrol;
+	}
+	public Socket getSocket() {
+		return socket;
+	}
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+		try {
+			oos=new ObjectOutputStream(socket.getOutputStream());
+			ois=new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
@@ -82,11 +113,56 @@ public class UIController implements Initializable {
 	}
 	public void insert(ActionEvent e)
 	{
-		System.out.println("인설트들어옴");
 		String t=title.getText();
 		String u=url.getText();
 		String c=category.getValue();
-		System.out.println("CATEGORY:"+c+"\n"+"TITLE:"+t+"\n"+"URL:"+u);
+		int category=0;
+		if(c.equals("교육"))
+		{
+			category=myLibrary.EDUCATION;
+		}
+		else if(c.equals("K-POP"))
+		{
+			category=myLibrary.KPOP;
+		}
+		else if(c.equals("여행"))
+		{
+			category=myLibrary.TRAVEL;
+		}
+		Command command=new Command(Command.SAVE);
+		command.setCategory(category);
+		command.setTitle(t);
+		command.setUrl(u);
+		try {
+			oos.writeObject(command);
+			oos.reset();
+			Command cmd=(Command)ois.readObject();
+			if(cmd.getCategory()==myLibrary.EDUCATION)
+			{
+				TreeItem<String> ti = new TreeItem<String>(command.getTitle());
+				treecontrol.getNode0().getChildren().add(ti);
+				String url=command.getUrl();
+			}
+			else if(cmd.getCategory()==myLibrary.KPOP)
+			{
+				TreeItem<String> ti = new TreeItem<String>(command.getTitle());
+				treecontrol.getNode1().getChildren().add(ti);
+				String url=command.getUrl();
+			}
+			else if(cmd.getCategory()==myLibrary.TRAVEL)
+			{
+				TreeItem<String> ti = new TreeItem<String>(command.getTitle());
+				treecontrol.getNode2().getChildren().add(ti);
+				String url=command.getUrl();
+			}
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	public void cancel(ActionEvent ee)
 	{
