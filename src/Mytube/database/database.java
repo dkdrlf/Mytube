@@ -69,9 +69,9 @@ public class database {
 	 * @return 검색결과 리스트를 보내주기
 	 */
 	public ArrayList<myLibrary> searchTube(String text){
-		ArrayList<myLibrary> result=null;
+		ArrayList<myLibrary> result=new ArrayList<>();
 
-		String sql = "select * from tube where title = '%?%'";
+		String sql = "select * from tube where title like '%'||?||'%'";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		PreparedStatement pstmt;
@@ -79,7 +79,7 @@ public class database {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, text);
 			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
+			while (rs.next()) {
 				String title = rs.getString("title");
 				int category = rs.getInt("category");
 				result.add(new myLibrary(category,title));

@@ -50,6 +50,7 @@ public class UIController implements Initializable, Runnable{
 	TextField url;
 	@FXML Button btn_store;
 	@FXML Button btn_delete;
+	@FXML TextField tf_search;
 	Button btn_insert;
 	Socket socket;
 	ObjectOutputStream oos;
@@ -61,6 +62,7 @@ public class UIController implements Initializable, Runnable{
 	TreeItem<String> node1;
 	TreeItem<String> node2;
 	TreeView<String > t;
+	Popup popup;
 	public TreeViewController getTreecontrol() {
 		return treecontrol;
 	}
@@ -138,6 +140,7 @@ public class UIController implements Initializable, Runnable{
 	}
 	public void delete(ActionEvent e)
 	{
+		popup.hide();
 		String s=t.getSelectionModel().getSelectedItem().getValue();
 		Command c=new Command(Command.DELETE);
 		c.setTitle(s);
@@ -147,6 +150,30 @@ public class UIController implements Initializable, Runnable{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+	
+	public void delete_dialog(ActionEvent e)
+	{
+		popup=new Popup();
+		try {
+			parent = FXMLLoader.load(getClass().getResource("delete_dialog.fxml"));
+			ImageView imageView = (ImageView) parent.lookup("#imgMessage");
+			imageView.setImage(new Image(getClass().getResource("dialog-warning.png").toString()));
+			Button yesButton=(Button)parent.lookup("#yes");
+			yesButton.setOnAction(event->delete(event));
+			Button noButton=(Button)parent.lookup("#no");
+			noButton.setOnAction(event->popup.hide());
+			String s=t.getSelectionModel().getSelectedItem().getValue();
+			Label message=(Label)parent.lookup("#delete_label");
+			message.setText(s+"를 정말로 삭제하시겠습니까?");
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		popup.getContent().add(parent);
+		popup.setAutoHide(true);	
+		popup.show(primaryStage);
 	}
 	public void insert(ActionEvent e)
 	{
@@ -175,6 +202,18 @@ public class UIController implements Initializable, Runnable{
 		command.setUrl(u);
 		sendData(command);
 		dialog.close();
+	}
+	public void search(ActionEvent e){
+		System.out.println("search:"+tf_search.getText());
+		Command c=new Command(Command.FIND);
+		c.setContents(tf_search.getText());
+		try {
+			oos.writeObject(c);
+			oos.reset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	public void cancel(ActionEvent ee)
 	{
@@ -216,6 +255,35 @@ public class UIController implements Initializable, Runnable{
 					}
 					case Command.FIND:
 					{
+						treecontrol.getRootNode().getChildren().clear();
+						
+						node0 = new TreeItem<String>("교육"); 
+						node1 = new TreeItem<String>("K-POP");
+						node2 = new TreeItem<String>("여행");
+						treecontrol.getRootNode().getChildren().add(node0);
+						treecontrol.getRootNode().getChildren().add(node1);
+						treecontrol.getRootNode().getChildren().add(node2);
+						ArrayList<myLibrary>al=new ArrayList<>();
+						al=cmd.getAlist();
+						for(myLibrary m:al)
+						{
+							if(m.getCategory()==myLibrary.EDUCATION)
+							{
+								System.out.println("education");
+								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
+								node0.getChildren().add(ti);
+							}
+							else if(m.getCategory()==myLibrary.KPOP)
+							{	System.out.println("kop");
+								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
+								node1.getChildren().add(ti);
+							}
+							else if(m.getCategory()==myLibrary.TRAVEL)
+							{	System.out.println("travel");
+								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
+								node2.getChildren().add(ti);
+							}
+						}
 						break;
 					}
 					case Command.DELETE:

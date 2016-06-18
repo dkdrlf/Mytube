@@ -15,7 +15,6 @@ public class Command implements Serializable{
 	private String contents;
 	private boolean result;
 	
-	
 	ArrayList<myLibrary> alist=new ArrayList<>();
 	
 	static final public int FIND=20;
@@ -70,5 +69,4 @@ public class Command implements Serializable{
 	public void setResult(boolean result){
 		this.result = result;
 	}
-	
 }

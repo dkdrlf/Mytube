@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane blendMode="DARKEN" prefHeight="97.0" prefWidth="244.0" style="-fx-background-color: green; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="yes" layoutX="68.0" layoutY="72.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="54.0" text="네" />
+      <Button fx:id="no" layoutX="131.0" layoutY="72.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="54.0" text="아니오" />
+      <ImageView fx:id="imgMessage" fitHeight="23.0" fitWidth="36.0" layoutX="12.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="delete_label" layoutX="38.0" layoutY="9.0" prefHeight="40.0" prefWidth="199.0" text="Label" />
+   </children>
+</AnchorPane>
