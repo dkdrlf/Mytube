@@ -35,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -51,6 +52,8 @@ public class UIController implements Initializable, Runnable{
 	@FXML Button btn_store;
 	@FXML Button btn_delete;
 	@FXML TextField tf_search;
+	@FXML Button btx_exit;
+	@FXML WebView web;
 	Button btn_insert;
 	Socket socket;
 	ObjectOutputStream oos;
@@ -105,6 +108,20 @@ public class UIController implements Initializable, Runnable{
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void imageShowall(ActionEvent e)
+	{
+		treecontrol.getRootNode().getChildren().clear();
+		
+		node0 = new TreeItem<String>("교육"); 
+		node1 = new TreeItem<String>("K-POP");
+		node2 = new TreeItem<String>("여행");
+		treecontrol.getRootNode().getChildren().add(node0);
+		treecontrol.getRootNode().getChildren().add(node1);
+		treecontrol.getRootNode().getChildren().add(node2);
+		
+		Command c=new Command(Command.SHOWALLTUBE);
+		sendData(c);
 	}
 	private void handleMouseClicked(MouseEvent event) {
 	    Node node = event.getPickResult().getIntersectedNode();

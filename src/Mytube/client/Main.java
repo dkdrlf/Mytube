@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -41,10 +42,13 @@ Socket socket;
 		try {
 			final Image img16 = new Image(getClass().getResourceAsStream("treeviewsample16.jpg"));
 			final Image img32 = new Image(getClass().getResourceAsStream("treeviewsample32.jpg"));
+			final Image showall= new Image(getClass().getResourceAsStream("showall.PNG"));
 			
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml001.fxml"));
 			Pane root =loader.load();
 			this.treecontrol =new TreeViewController((TreeView<String>)root.lookup("#treeview"));
+			ImageView iv=(ImageView) root.lookup("#image_showall");
+			iv.setImage(showall);
 			UIController controller = loader.getController();
 			controller.setPrimaryStage(primaryStage);
 			controller.setSocket(socket);
