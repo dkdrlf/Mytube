@@ -35,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
@@ -131,6 +132,12 @@ public class UIController implements Initializable, Runnable{
 	        System.out.println("Node click: " + name);
 	    }
 	}
+	public void mytube(ActionEvent event)
+	{
+		WebEngine engine=web.getEngine();
+		engine.load("url");
+	}
+	
 	public void store(ActionEvent e) throws IOException
 	{
 		dialog = new Stage(StageStyle.UTILITY);

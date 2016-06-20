@@ -11,3 +11,13 @@ create table tube(
  commit
  
  delete from tube;
+ 
+ alter table tube
+ add(user varchar(30) not null);
+ 
+ create table tube_user(
+ name varchar(30) primary key,
+ password varchar(30) not null);
+ 
+
+ 
