@@ -42,7 +42,7 @@
          </children>
       </AnchorPane>
    </bottom>
-   <center>
-      <WebView fx:id="web" prefHeight="252.0" prefWidth="390.0" BorderPane.alignment="CENTER" />
-   </center>
+   <right>
+      <WebView fx:id="web" prefHeight="315.0" prefWidth="560.0" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>

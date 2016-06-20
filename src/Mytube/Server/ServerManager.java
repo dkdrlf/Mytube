@@ -63,6 +63,13 @@ public class ServerManager implements Runnable {
 					resultCmd.setAlist(dao.showAllTube());
 					sendData(resultCmd);
 					break;
+					//영상띄우기
+				case Command.SHOWTUBE:
+					resultCmd = new Command(Command.SHOWTUBE);
+					resultCmd.setUrl(dao.showTube(cmd.getTitle()));
+					sendData(resultCmd);
+					break;
+				
 				}
 
 			} catch (ClassNotFoundException e) {
