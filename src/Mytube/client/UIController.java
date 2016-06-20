@@ -1,5 +1,7 @@
 package Mytube.client;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -124,18 +126,31 @@ public class UIController implements Initializable, Runnable{
 		Command c=new Command(Command.SHOWALLTUBE);
 		sendData(c);
 	}
+	
+	//트리마우스
 	private void handleMouseClicked(MouseEvent event) {
-	    Node node = event.getPickResult().getIntersectedNode();
-	    // Accept clicks only on node cells, and not on empty spaces of the TreeView
-	    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-	        String name = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
-	        System.out.println("Node click: " + name);
-	    }
+		if(event.getClickCount()==2){ //더블클릭 처리 !!
+		    Node node = event.getPickResult().getIntersectedNode();
+		    // Accept clicks only on node cells, and not on empty spaces of the TreeView
+		    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+		    	if((String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="교육" &&
+		    			(String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="K-POP" &&
+		    					(String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="여행"){
+		        String name = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
+		        //System.out.println("Node click: " + name);
+		        
+		        Command c = new Command(Command.SHOWTUBE);
+		        c.setTitle(name);
+		        sendData(c);
+		    	}
+		    }
+			}
 	}
-	public void mytube(ActionEvent event)
+	public void mytube()
 	{
+		//웹
 		WebEngine engine=web.getEngine();
-		engine.load("url");
+		engine.load("file:///d:/temp.html");
 	}
 	
 	public void store(ActionEvent e) throws IOException
@@ -355,6 +370,12 @@ public class UIController implements Initializable, Runnable{
 						}
 						break;
 					}
+					case Command.SHOWTUBE:
+					{
+						String address = cmd.getUrl(); //url;
+						setfile(address);
+						mytube();
+					}
 					
 				}
 			} catch (IOException e1) {
@@ -376,5 +397,18 @@ public class UIController implements Initializable, Runnable{
 			e.printStackTrace();
 		}
 	}
+	  public void setfile(String address){
+	    	File file = new File("d:/temp.html");
+	    	try {
+				FileWriter fw = new FileWriter(file);
+				String str = "<html><body><iframe width='560' height='315' src='"+address+"' frameborder='0' allowfullscreen></iframe></body></html>";
+				fw.write(str);
+				fw.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	
+	    }
 
 }
