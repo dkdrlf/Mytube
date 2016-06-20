@@ -54,7 +54,6 @@ public class UIController implements Initializable, Runnable{
 	@FXML Button btn_delete;
 	@FXML TextField tf_search;
 	@FXML Button btx_exit;
-	@FXML WebView web;
 	Button btn_insert;
 	Socket socket;
 	ObjectOutputStream oos;
@@ -108,7 +107,6 @@ public class UIController implements Initializable, Runnable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
 	}
 	public void imageShowall(ActionEvent e)
 	{
@@ -130,12 +128,22 @@ public class UIController implements Initializable, Runnable{
 	    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
 	        String name = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
 	        System.out.println("Node click: " + name);
+	        mytube();
 	    }
 	}
-	public void mytube(ActionEvent event)
+	public void mytube()
 	{
-		WebEngine engine=web.getEngine();
-		engine.load("url");
+		try {
+			System.out.println("마이튜브");
+			parent = FXMLLoader.load(getClass().getResource("fxml001.fxml"));
+			WebView view = (WebView) parent.lookup("#web");
+			WebEngine engine = view.getEngine();
+			engine.load("http//www.naver.com");
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void store(ActionEvent e) throws IOException

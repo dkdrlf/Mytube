@@ -61,6 +61,9 @@ Socket socket;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	public class LoginUI
+	{
 		
 	}
 }
