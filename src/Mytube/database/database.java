@@ -14,6 +14,46 @@ import Mytube.vo.myLibrary;
 
 public class database {
 	
+	public boolean checkUser(String name){
+		boolean result = false;
+		String sql = "select * from tube where name = ?";
+		ConnectionManager cm = ConnectionManager.getInstance();
+		Connection con = cm.getConnection();
+		PreparedStatement pstmt;
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, name);
+			pstmt.executeQuery();
+			ResultSet rs = pstmt.getResultSet();
+			rs.getRow();
+		}
+		return result;
+	}
+	
+	
+	public boolean insertUser(String name, String password)
+	{
+		boolean result = false;
+		
+		String sql = "insert into tube_user values(?,?)";
+		ConnectionManager cm = ConnectionManager.getInstance();
+		Connection con = cm.getConnection();
+		try {
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, name);
+			pstmt.setString(2, password);
+			pstmt.executeUpdate();
+			System.out.println("등록 완료");
+			result = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			cm.close(con);
+		}
+		return result;
+		 
+	}
 	
 	/**
 	 * 동영상을 볼수있는 등록
@@ -21,9 +61,9 @@ public class database {
 	 * @param title 동영상 제목
 	 * @param url 동영상의 유튜브 url 주소
 	 */
-	public boolean insertTube(int category, String title, String url){
+	public boolean insertTube(int category, String title, String url,String name){
 		boolean result =false;
-		String sql = "insert into tube values(seq_num.nextval,?,?,?)";
+		String sql = "insert into tube values(seq_num.nextval,?,?,?,?)";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		try {
@@ -31,6 +71,7 @@ public class database {
 			pstmt.setInt(1, category);
 			pstmt.setString(2, title);
 			pstmt.setString(3, url);
+			pstmt.setString(4, name);
 			pstmt.executeUpdate();
 			System.out.println("삽입 완료");
 			result = true;
@@ -45,14 +86,15 @@ public class database {
 	 * DB에서 제목을 통한 삭제를 위한 메소드
 	 * @param title : 동영상 제목
 	 */
-	public boolean deleteTube(String title){
+	public boolean deleteTube(String title, String name){
 		boolean result = false;
-		String sql = "delete from tube where title = ?";
+		String sql = "delete from tube where title = ? && name = ?";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, title);
+			pstmt.setString(2, name);
 			pstmt.executeUpdate();
 			System.out.println("삭제 성공");
 			result = true;
@@ -68,16 +110,17 @@ public class database {
 	 * @param text : 검색어
 	 * @return 검색결과 리스트를 보내주기
 	 */
-	public ArrayList<myLibrary> searchTube(String text){
+	public ArrayList<myLibrary> searchTube(String text, String name){
 		ArrayList<myLibrary> result=new ArrayList<>();
 
-		String sql = "select * from tube where title like '%'||?||'%'";
+		String sql = "select * from tube where name= ? && title like '%'||?||'%'";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		PreparedStatement pstmt;
 		try {
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, text);
+			pstmt.setString(1, name);
+			pstmt.setString(2, text);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				String title = rs.getString("title");
@@ -97,7 +140,7 @@ public class database {
 	 * @param title
 	 * @return url 정보를 넘겨줌
 	 */
-	public String showTube(String title){
+	public String showTube(String title,String name){
 		String address=null;
 		String sql = "select * from tube where title = ?";
 		ConnectionManager cm = ConnectionManager.getInstance();
@@ -106,8 +149,11 @@ public class database {
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, title);
+			pstmt.setString(2, name);
 			ResultSet rs = pstmt.executeQuery();
-			address = rs.getString("url");
+			while(rs.next()){
+				address = rs.getString("url");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,14 +166,15 @@ public class database {
 	 * DB에 있는 모든 객체들을 가지고옴.
 	 * @return myLibrary가 담겨있는 arraylist를 보내기.
 	 */
-	public ArrayList<myLibrary> showAllTube(){
+	public ArrayList<myLibrary> showAllTube(String name){
 		ArrayList<myLibrary> allList = new ArrayList<>();
-		String sql = "select * from tube";
+		String sql = "select * from tube where name=?";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		PreparedStatement pstmt;
 		try {
 			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, name);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next()){
 				int category = rs.getInt("category");

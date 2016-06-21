@@ -13,11 +13,14 @@ create table tube(
  delete from tube;
  
  alter table tube
- add(user varchar(30) not null);
+ add(name varchar(30),
+  constraint tube_name_fk foreign key (name) references tube_user(name) on delete cascade);
  
+  delete from tube;
+  
  create table tube_user(
  name varchar(30) primary key,
  password varchar(30) not null);
  
-
+commit
  

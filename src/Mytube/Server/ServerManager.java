@@ -14,13 +14,15 @@ public class ServerManager implements Runnable {
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private database dao;
+	private String name;
 	Command resultCmd;
 
-	public ServerManager(Socket client) {
+	public ServerManager(Socket client, String name) {
 		try {
 			ois = new ObjectInputStream(client.getInputStream());
 			oos = new ObjectOutputStream(client.getOutputStream());
 			dao = new database();
+			this.name = name;
 			serverStart();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

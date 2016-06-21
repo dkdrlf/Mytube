@@ -398,7 +398,7 @@ public class UIController implements Initializable, Runnable{
 		}
 	}
 	  public void setfile(String address){
-	    	File file = new File("d:/temp.html");
+	    	File file = new File("c:/temp.html");
 	    	try {
 				FileWriter fw = new FileWriter(file);
 				String str = "<html><body><iframe width='560' height='315' src='"+address+"' frameborder='0' allowfullscreen></iframe></body></html>";
