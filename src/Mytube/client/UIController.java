@@ -160,16 +160,31 @@ public class UIController implements Initializable, Runnable{
 	
 	public void store(ActionEvent e) throws IOException
 	{
+		
+		//url 가지고 오기
+		//url setting 하기
+		
+		
+		
+		
 		dialog = new Stage(StageStyle.UTILITY);
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.initOwner(primaryStage);
 		dialog.setTitle("Store");
 			
 		parent = FXMLLoader.load(getClass().getResource("store.fxml"));
+		
+		
+		
+		
 		btn_insert=(Button)parent.lookup("#btn_insert");
 		btn_insert.setOnAction(event->insert(event));
 		title=(TextField)parent.lookup("#title");
 		url=(TextField)parent.lookup("#url");
+		url.setText(web.getEngine().getDocument().getBaseURI());
+		
+		
+		
 		category=(ComboBox<String>)parent.lookup("#category");
 		
 		ObservableList<String> list = FXCollections.observableArrayList("교육", "K-POP", "여행");
@@ -188,6 +203,7 @@ public class UIController implements Initializable, Runnable{
 		String s=t.getSelectionModel().getSelectedItem().getValue();
 		Command c=new Command(Command.DELETE);
 		c.setTitle(s);
+		c.setUser(user);
 		try {
 			oos.writeObject(c);
 		} catch (IOException e1) {
@@ -244,6 +260,7 @@ public class UIController implements Initializable, Runnable{
 		command.setCategory(category);
 		command.setTitle(t);
 		command.setUrl(u);
+		command.setUser(user);
 		sendData(command);
 		dialog.close();
 	}
@@ -251,6 +268,7 @@ public class UIController implements Initializable, Runnable{
 		System.out.println("search:"+tf_search.getText());
 		Command c=new Command(Command.FIND);
 		c.setContents(tf_search.getText());
+		c.setUser(user);
 		try {
 			oos.writeObject(c);
 			oos.reset();
@@ -409,7 +427,7 @@ public class UIController implements Initializable, Runnable{
           File file = new File("d:/temp.html");
           String[] temp;
           System.out.println("어드레스"+address);
-          temp=address.split("be/");
+          temp=address.split("watch?v=");
           try {
             FileWriter fw = new FileWriter(file);
             String str = "<!DOCTYPE html><html><head><meta charset='utf-8'><title></title></head><body><iframe width='560' height='315' src='https://www.youtube.com/embed/"+temp[1]+"?version=3&arnp;hl=ko_KR&arnp;rel=0&amp;autoplay=1;showinfo=0' frameborder='0' allowfullscreen></iframe></body></html>";

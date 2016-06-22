@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.sun.corba.se.impl.orbutil.RepositoryIdUtility;
 
+import Mytube.vo.User;
 import Mytube.vo.myLibrary;
 
 
@@ -21,9 +22,9 @@ public class database {
 	 * @param title 동영상 제목
 	 * @param url 동영상의 유튜브 url 주소
 	 */
-	public boolean insertTube(int category, String title, String url){
+	public boolean insertTube(int category, String title, String url, User user){
 		boolean result =false;
-		String sql = "insert into tube values(seq_num.nextval,?,?,?)";
+		String sql = "insert into tube values(seq_num.nextval,?,?,?,?)";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		try {
@@ -31,6 +32,7 @@ public class database {
 			pstmt.setInt(1, category);
 			pstmt.setString(2, title);
 			pstmt.setString(3, url);
+			pstmt.setString(4, user.getName());
 			pstmt.executeUpdate();
 			System.out.println("삽입 완료");
 			result = true;
@@ -45,14 +47,15 @@ public class database {
 	 * DB에서 제목을 통한 삭제를 위한 메소드
 	 * @param title : 동영상 제목
 	 */
-	public boolean deleteTube(String title){
+	public boolean deleteTube(String title, User user){
 		boolean result = false;
-		String sql = "delete from tube where title = ?";
+		String sql = "delete from tube where title = ? && name=?";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		try {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, title);
+			pstmt.setString(2, user.getName());
 			pstmt.executeUpdate();
 			System.out.println("삭제 성공");
 			result = true;
@@ -68,16 +71,17 @@ public class database {
 	 * @param text : 검색어
 	 * @return 검색결과 리스트를 보내주기
 	 */
-	public ArrayList<myLibrary> searchTube(String text){
+	public ArrayList<myLibrary> searchTube(String text, User user){
 		ArrayList<myLibrary> result=new ArrayList<>();
 
-		String sql = "select * from tube where title like '%'||?||'%'";
+		String sql = "select * from tube where name = ? && title like '%'||?||'%'";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		PreparedStatement pstmt;
 		try {
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, text);
+			pstmt.setString(1, user.getName());
+			pstmt.setString(2, text);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				String title = rs.getString("title");
@@ -97,15 +101,16 @@ public class database {
 	 * @param title
 	 * @return url 정보를 넘겨줌
 	 */
-	public String showTube(String title){
+	public String showTube(String title,User user){
 		String address=null;
-		String sql = "select * from tube where title = ?";
+		String sql = "select * from tube where title = ? && name = ?";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		PreparedStatement pstmt;
 		try {
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, title);
+			pstmt.setString(2, user.getName());
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
 			{
@@ -123,14 +128,15 @@ public class database {
 	 * DB에 있는 모든 객체들을 가지고옴.
 	 * @return myLibrary가 담겨있는 arraylist를 보내기.
 	 */
-	public ArrayList<myLibrary> showAllTube(){
+	public ArrayList<myLibrary> showAllTube(User user){
 		ArrayList<myLibrary> allList = new ArrayList<>();
-		String sql = "select * from tube";
+		String sql = "select * from tube where name = ?";
 		ConnectionManager cm = ConnectionManager.getInstance();
 		Connection con = cm.getConnection();
 		PreparedStatement pstmt;
 		try {
 			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, user.getName());
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next()){
 				int category = rs.getInt("category");

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Mytube.vo.User;
 import Mytube.vo.myLibrary;
 
 public class Command implements Serializable{
@@ -14,6 +15,7 @@ public class Command implements Serializable{
 	private int satatus;
 	private String contents;
 	private boolean result;
+	private User user;
 	
 	ArrayList<myLibrary> alist=new ArrayList<>();
 	
@@ -69,5 +71,13 @@ public class Command implements Serializable{
 	}
 	public void setResult(boolean result){
 		this.result = result;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

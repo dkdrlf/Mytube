@@ -61,6 +61,7 @@ Socket socket;
 			controller.setTreecontrol(treecontrol);
 			WebView web=(WebView) root.lookup("#web");
 			web.getEngine().load("https://www.youtube.com/");
+			//System.out.println(web.getEngine().getLocation());
 			controller.setWeb(web);
 			
 			primaryStage.setScene(new Scene(root));
