@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="167.0" prefWidth="210.0" style="-fx-background-color: Aquamarine; -fx-background-radius: 20;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <Label fx:id="lb_join" layoutX="14.0" layoutY="23.0" prefHeight="66.0" prefWidth="181.0" text="Label" />
+      <Button fx:id="btn_join" layoutX="69.0" layoutY="109.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="75.0" text="확인" />
+   </children>
+</AnchorPane>

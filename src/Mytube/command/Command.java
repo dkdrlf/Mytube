@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Mytube.vo.User;
 import Mytube.vo.myLibrary;
 
 public class Command implements Serializable{
@@ -14,6 +15,7 @@ public class Command implements Serializable{
 	private int satatus;
 	private String contents;
 	private boolean result;
+	private User user;
 	
 	ArrayList<myLibrary> alist=new ArrayList<>();
 	
@@ -22,7 +24,17 @@ public class Command implements Serializable{
 	static final public int SAVE=10;
 	static final public int SHOWALLTUBE=40;
 	static final public int SHOWTUBE=50; //명령어
+	static final public int JOIN=60;
+	static final public int LOGIN=70;
 	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Command(int status){
 		this.satatus = status;
 	}

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.sun.corba.se.impl.orbutil.RepositoryIdUtility;
 
+import Mytube.vo.User;
 import Mytube.vo.myLibrary;
 
 
@@ -141,6 +142,82 @@ public class database {
 			cm.close(con);
 		}
 		return allList;
+	}
+	public boolean checkUser(String name){
+	      boolean result = false;
+	      String sql = "select * from tube_user where name = ?";
+	      ConnectionManager cm = ConnectionManager.getInstance();
+	      Connection con = cm.getConnection();
+	      PreparedStatement pstmt;
+	      try {
+	         pstmt = con.prepareStatement(sql);
+	         pstmt.setString(1, name);
+	         pstmt.executeQuery();
+	         ResultSet rs = pstmt.getResultSet();
+	         if(rs.getRow()==0)
+	         {
+	        	 result=true;
+	         }
+	      } catch (SQLException e) {
+	         e.printStackTrace();
+	      } finally {
+	         cm.close(con);
+	      }
+	      return result;
+	   }
+	
+	public boolean login(User user)
+	{
+		boolean result =false;
+		boolean b=checkUser(user.getName());
+		if(b)
+		{
+			String sql="select password from tube_user where name=?";
+			ConnectionManager cm= ConnectionManager.getInstance();
+			Connection con=cm.getConnection();
+			PreparedStatement pstmt;
+			try {
+				pstmt=con.prepareStatement(sql);
+				pstmt.setString(1, user.getName());
+				pstmt.executeQuery();
+				ResultSet rs=pstmt.getResultSet();
+				if(rs.next())
+				{
+					result=true;
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				cm.close(con);
+			}
+			
+		}
+		return result;
+	}
+	public boolean join(User user)
+	{
+		boolean result =false;
+		boolean b=checkUser(user.getName());
+		if(b)
+		{
+			String sql = "insert into tube_user values(?,?)";
+			ConnectionManager cm = ConnectionManager.getInstance();
+			Connection con = cm.getConnection();
+			try {
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, user.getName());
+				pstmt.setString(2, user.getPassword());
+				pstmt.executeUpdate();
+				System.out.println("삽입 완료");
+				result = true;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				cm.close(con);
+			}
+		}
+		return result;
 	}
 	
 }

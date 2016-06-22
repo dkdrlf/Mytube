@@ -14,7 +14,9 @@ import java.util.ResourceBundle;
 import com.sun.xml.internal.bind.v2.model.annotation.RuntimeAnnotationReader;
 
 import Mytube.command.Command;
+import Mytube.vo.User;
 import Mytube.vo.myLibrary;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,6 +38,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -57,11 +60,11 @@ public class UIController implements Initializable, Runnable{
 	@FXML TextField tf_search;
 	@FXML Button btx_exit;
 	Button btn_insert;
-	Socket socket;
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
 	TreeViewController treecontrol;
 	Parent parent=null;
+	Pane pane=null;
 	Stage dialog;
 	TreeItem<String> node0;
 	TreeItem<String> node1;
@@ -69,12 +72,20 @@ public class UIController implements Initializable, Runnable{
 	TreeView<String > t;
 	Popup popup;
 	WebView web;
+	User user;
 	
+	public void setPane(Pane pane) {
+		this.pane = pane;
+	}
 	public void setWeb(WebView web) {
 		this.web = web;
 	}
 	public TreeViewController getTreecontrol() {
 		return treecontrol;
+	}
+	public void setUser(User user)
+	{
+		this.user=user;
 	}
 	public void setTreecontrol(TreeViewController treecontrol) {
 		this.treecontrol = treecontrol;
@@ -89,21 +100,13 @@ public class UIController implements Initializable, Runnable{
 		t.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEventHandle);
 		
 	}
-	public Socket getSocket() {
-		return socket;
-	}
-	public void setSocket(Socket socket) {
-		this.socket = socket;
-		try {
-			oos=new ObjectOutputStream(socket.getOutputStream());
-			ois=new ObjectInputStream(socket.getInputStream());
+	
+	public void setSocket(ObjectOutputStream oos,ObjectInputStream ois) {
+			this.ois=ois;
+			this.oos=oos;
 			ThreadStart();
 			Command c=new Command(Command.SHOWALLTUBE);
 			sendData(c);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	public Stage getPrimaryStage() {
 		return primaryStage;
@@ -125,7 +128,7 @@ public class UIController implements Initializable, Runnable{
 		treecontrol.getRootNode().getChildren().add(node0);
 		treecontrol.getRootNode().getChildren().add(node1);
 		treecontrol.getRootNode().getChildren().add(node2);
-		
+		web.getEngine().load("https://www.youtube.com/");
 		Command c=new Command(Command.SHOWALLTUBE);
 		sendData(c);
 	}
@@ -187,6 +190,7 @@ public class UIController implements Initializable, Runnable{
 		String s=t.getSelectionModel().getSelectedItem().getValue();
 		Command c=new Command(Command.DELETE);
 		c.setTitle(s);
+		
 		try {
 			oos.writeObject(c);
 		} catch (IOException e1) {
@@ -377,8 +381,74 @@ public class UIController implements Initializable, Runnable{
 					case Command.SHOWTUBE:
 					{
 						String address = cmd.getUrl(); //url;
+						System.out.println("쇼튜부 클라이언"+cmd.getUrl());
 						setfile(address);
-						mytube();
+						Platform.runLater(()->{
+							mytube();
+						});
+					}
+					case Command.JOIN:
+					{	
+						Boolean r=cmd.getResult();
+						popup=new Popup();
+						try {
+							parent = FXMLLoader.load(getClass().getResource("join.fxml"));
+							Label label = (Label) parent.lookup("#lb_join");
+							if(r)
+							{
+								label.setText("가입에 성공하셨습니다!");
+							}
+							else
+							{
+								label.setText("아이디가 중복됩니다");
+							}
+							Button button=(Button)parent.lookup("#btn_join");
+							button.setOnAction(event->popup.hide());
+							
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						popup.getContent().add(parent);
+						popup.setAutoHide(true);
+						Platform.runLater(()->{
+						popup.show(primaryStage);
+						});
+						break;
+					}
+					case Command.LOGIN:
+					{
+						Boolean r=cmd.getResult();
+						popup=new Popup();
+						try {
+							parent = FXMLLoader.load(getClass().getResource("join.fxml"));
+							Label label = (Label) parent.lookup("#lb_join");
+							if(r)
+							{
+								final Image mytube = new Image(getClass().getResourceAsStream("mytb.png"));
+								Platform.runLater(()->{
+								primaryStage.setScene(new Scene(pane));
+								primaryStage.setTitle("MyTube");
+								primaryStage.getIcons().addAll(mytube);
+								primaryStage.show();
+								});
+							}
+							else
+							{
+								label.setText("정보가 일치하지 않습니다");
+								popup.getContent().add(parent);
+								popup.setAutoHide(true);
+								Platform.runLater(()->{
+								popup.show(primaryStage);
+								});
+							}
+							Button button=(Button)parent.lookup("#btn_join");
+							button.setOnAction(event->popup.hide());
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						break;
 					}
 					
 				}
@@ -389,7 +459,6 @@ public class UIController implements Initializable, Runnable{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
 		}
 	}
 	public void sendData(Command result){
@@ -405,7 +474,7 @@ public class UIController implements Initializable, Runnable{
 	    	File file = new File("C:/Users/user/workspace1");
 	    	try {
 				FileWriter fw = new FileWriter(file);
-				String str = "<html><body><iframe width='560' height='315' src='"+address+"' frameborder='0' allowfullscreen></iframe></body></html>";
+				String str = "<html><body><iframe width='560' height='315' src='"+address+"?version=3&arnp;hl=ko_KR&arnp;rel=0&amp;autoplay=1;showinfo=0' frameborder='0' allowfullscreen></iframe></body></html>";
 				System.out.println("파일셋");
 				fw.write(str);
 				fw.close();

@@ -11,6 +11,7 @@ create table tube(
  commit
  
  delete from tube;
+ delete from tube_user;
  
  alter table tube
  add(user varchar(30) not null);
@@ -26,6 +27,7 @@ values('111','1111');
 
 insert into tube
 values(seq_num.nextval,'교육','bb','111','aaaaaaa');
+
 
 
  

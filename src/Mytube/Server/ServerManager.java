@@ -70,6 +70,18 @@ public class ServerManager implements Runnable {
 					sendData(resultCmd);
 					break;
 				
+				case Command.JOIN:
+					resultCmd =new Command(Command.JOIN);
+					resultCmd.setResult(dao.join(cmd.getUser()));
+					sendData(resultCmd);
+					break;
+					
+				case Command.LOGIN:
+					System.out.println("서버로그인");
+					resultCmd=new Command(Command.LOGIN);
+					resultCmd.setResult(dao.login(cmd.getUser()));
+					sendData(resultCmd);
+					break;
 				}
 
 			} catch (ClassNotFoundException e) {
