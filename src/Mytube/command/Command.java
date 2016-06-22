@@ -82,4 +82,6 @@ public class Command implements Serializable{
 	public void setResult(boolean result){
 		this.result = result;
 	}
+
+
 }

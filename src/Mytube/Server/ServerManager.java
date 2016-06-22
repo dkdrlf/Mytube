@@ -41,32 +41,33 @@ public class ServerManager implements Runnable {
 				case Command.SAVE:
 					System.out.println("세이브 들어옴3");
 					resultCmd = new Command(Command.SAVE);
-					resultCmd.setResult(dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl()));
+					resultCmd.setResult(dao.insertTube(cmd.getCategory(), cmd.getTitle(), cmd.getUrl(), cmd.getUser()));
 					resultCmd.setCategory(cmd.getCategory());
 					resultCmd.setTitle(cmd.getTitle());
 					sendData(resultCmd);
 					break;
 				case Command.FIND:
 					resultCmd = new Command(Command.FIND);
-					al = dao.searchTube(cmd.getContents());
+					al = dao.searchTube(cmd.getContents(), cmd.getUser());
+					System.out.println("파인드2"+al);
 					resultCmd.setAlist(al);
 					sendData(resultCmd);
 					break;
 				case Command.DELETE:
 					resultCmd = new Command(Command.DELETE);
-					resultCmd.setResult(dao.deleteTube(cmd.getTitle()));
+					resultCmd.setResult(dao.deleteTube(cmd.getTitle(), cmd.getUser()));
 					resultCmd.setTitle(cmd.getTitle());
 					sendData(resultCmd);
 					break;
 				case Command.SHOWALLTUBE:
 					resultCmd = new Command(Command.SHOWALLTUBE);
-					resultCmd.setAlist(dao.showAllTube());
+					resultCmd.setAlist(dao.showAllTube(cmd.getUser()));
 					sendData(resultCmd);
 					break;
 					//영상띄우기
 				case Command.SHOWTUBE:
 					resultCmd = new Command(Command.SHOWTUBE);
-					resultCmd.setUrl(dao.showTube(cmd.getTitle()));
+					resultCmd.setUrl(dao.showTube(cmd.getTitle(), cmd.getUser()));
 					sendData(resultCmd);
 					break;
 				
@@ -79,6 +80,7 @@ public class ServerManager implements Runnable {
 				case Command.LOGIN:
 					System.out.println("서버로그인");
 					resultCmd=new Command(Command.LOGIN);
+					resultCmd.setUser(cmd.getUser());
 					resultCmd.setResult(dao.login(cmd.getUser()));
 					sendData(resultCmd);
 					break;

@@ -58,6 +58,7 @@ UIController controller;
 		try {
 			
 			//final Image mytube = new Image(getClass().getResourceAsStream("mytb.png"));
+			final Image mytube = new Image(getClass().getResourceAsStream("mytb.png"));
 			//final Image img32 = new Image(getClass().getResourceAsStream("treeviewsample32.jpg"));
 			final Image showall= new Image(getClass().getResourceAsStream("showall.PNG"));
 			final Image mytubeLogo=new Image(getClass().getResourceAsStream("mytube_logo.jpg"));
@@ -76,6 +77,7 @@ UIController controller;
 			controller.setTreecontrol(treecontrol);
 			WebView web=(WebView) root.lookup("#web");
 			web.getEngine().load("https://www.youtube.com/");
+			//System.out.println(web.getEngine().getLocation());
 			controller.setWeb(web);
 			mytubeStart(primaryStage);
 			/*
@@ -132,7 +134,6 @@ UIController controller;
 		String id=tf_id.getText();
 		String password=tf_password.getText();
 		User u=new User(id,password);
-		//controller.setUser(u);
 		Command c=new Command(Command.LOGIN);
 		c.setUser(u);
 		try {

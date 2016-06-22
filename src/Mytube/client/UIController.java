@@ -105,8 +105,6 @@ public class UIController implements Initializable, Runnable{
 			this.ois=ois;
 			this.oos=oos;
 			ThreadStart();
-			Command c=new Command(Command.SHOWALLTUBE);
-			sendData(c);
 	}
 	public Stage getPrimaryStage() {
 		return primaryStage;
@@ -130,48 +128,54 @@ public class UIController implements Initializable, Runnable{
 		treecontrol.getRootNode().getChildren().add(node2);
 		web.getEngine().load("https://www.youtube.com/");
 		Command c=new Command(Command.SHOWALLTUBE);
+		c.setUser(user);
 		sendData(c);
+		web.getEngine().load("https://www.youtube.com/");
 	}
 	
 	//트리마우스
 	private void handleMouseClicked(MouseEvent event) {
 	  
 		if(event.getClickCount()==2){ //더블클릭 처리 !!
-		    Node node = event.getPickResult().getIntersectedNode();
-		    // Accept clicks only on node cells, and not on empty spaces of the TreeView
-		    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-		    	if((String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="교육" &&
-		    			(String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="K-POP" &&
-		    					(String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="여행"){
-		        String address = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
-		        //setfile(address);
-		       mytube();
-		        //System.out.println("Node click: " + name);
-		     //   Command c = new Command(Command.SHOWTUBE);
-		      //  c.setTitle(name);
-		       // sendData(c);
-		    	}
-		    }
-		}
+	          Node node = event.getPickResult().getIntersectedNode();
+	          // Accept clicks only on node cells, and not on empty spaces of the TreeView
+	          if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+	             if((String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="교육" &&
+	                   (String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="K-POP" &&
+	                         (String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="여행"){
+	              String title = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
+	              
+	              //System.out.println("Node click: " + name);
+	              //mytube();
+	              Command c = new Command(Command.SHOWTUBE);
+	              c.setUser(user);
+	              c.setTitle(title);
+	              sendData(c);
+	             }
+	          }
+	      }
 	}
 	public void mytube()
 	{
-			System.out.println("마이튜브");
-			web.getEngine().load("file:///d:/temp.html");
+			web.getEngine().load("file:///D:/temp.html");
 	}
 	
 	public void store(ActionEvent e) throws IOException
 	{
+		
 		dialog = new Stage(StageStyle.UTILITY);
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.initOwner(primaryStage);
 		dialog.setTitle("Store");
 			
 		parent = FXMLLoader.load(getClass().getResource("store.fxml"));
+		
 		btn_insert=(Button)parent.lookup("#btn_insert");
 		btn_insert.setOnAction(event->insert(event));
 		title=(TextField)parent.lookup("#title");
 		url=(TextField)parent.lookup("#url");
+		url.setText(web.getEngine().getDocument().getBaseURI());
+		
 		category=(ComboBox<String>)parent.lookup("#category");
 		
 		ObservableList<String> list = FXCollections.observableArrayList("교육", "K-POP", "여행");
@@ -189,8 +193,8 @@ public class UIController implements Initializable, Runnable{
 		popup.hide();
 		String s=t.getSelectionModel().getSelectedItem().getValue();
 		Command c=new Command(Command.DELETE);
+		c.setUser(user);
 		c.setTitle(s);
-		
 		try {
 			oos.writeObject(c);
 		} catch (IOException e1) {
@@ -227,15 +231,13 @@ public class UIController implements Initializable, Runnable{
 		String t=title.getText();
 		String u=url.getText();
 		String c=this.category.getValue();
-		System.out.println(c);
 		int category=0;
 		if(c.equals("교육"))
 		{
-			System.out.println("교육비교");
 			category=myLibrary.EDUCATION;
 		}
 		else if(c.equals("K-POP"))
-		{System.out.println("케이팝비교");
+		{
 			category=myLibrary.KPOP;
 		}
 		else if(c.equals("여행"))
@@ -247,13 +249,15 @@ public class UIController implements Initializable, Runnable{
 		command.setCategory(category);
 		command.setTitle(t);
 		command.setUrl(u);
+		command.setUser(user);
 		sendData(command);
 		dialog.close();
 	}
 	public void search(ActionEvent e){
-		System.out.println("search:"+tf_search.getText());
 		Command c=new Command(Command.FIND);
 		c.setContents(tf_search.getText());
+		System.out.println("서치겟텍스트"+tf_search.getText());
+		c.setUser(user);
 		try {
 			oos.writeObject(c);
 			oos.reset();
@@ -276,27 +280,24 @@ public class UIController implements Initializable, Runnable{
 		while(true){
 			try {
 				Command cmd=(Command)ois.readObject();
-				System.out.println(cmd.getCategory());
 				switch(cmd.getSatatus())
 				{
 					case Command.SAVE:
 					{
 						if(cmd.getCategory()==myLibrary.EDUCATION)
 						{
-							System.out.println("education");
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
 							node0.getChildren().add(ti);
 						}
 						else if(cmd.getCategory()==myLibrary.KPOP)
-						{	System.out.println("kop");
+						{	
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
 							node1.getChildren().add(ti);
 						}
 						else if(cmd.getCategory()==myLibrary.TRAVEL)
-						{	System.out.println("travel");
+						{	
 							TreeItem<String> ti = new TreeItem<String>(cmd.getTitle());
 							node2.getChildren().add(ti);
-							
 						}
 						break;
 					}
@@ -316,17 +317,16 @@ public class UIController implements Initializable, Runnable{
 						{
 							if(m.getCategory()==myLibrary.EDUCATION)
 							{
-								System.out.println("education");
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								node0.getChildren().add(ti);
 							}
 							else if(m.getCategory()==myLibrary.KPOP)
-							{	System.out.println("kop");
+							{	
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								node1.getChildren().add(ti);
 							}
 							else if(m.getCategory()==myLibrary.TRAVEL)
-							{	System.out.println("travel");
+							{	
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								node2.getChildren().add(ti);
 							}
@@ -345,6 +345,7 @@ public class UIController implements Initializable, Runnable{
 						treecontrol.getRootNode().getChildren().add(node2);
 						
 						Command c=new Command(Command.SHOWALLTUBE);
+						c.setUser(user);
 						oos.writeObject(c);
 						oos.reset();
 						
@@ -353,25 +354,22 @@ public class UIController implements Initializable, Runnable{
 					
 					case Command.SHOWALLTUBE:
 					{
-						System.out.println("딜리트쇼올 드러옴");
 						ArrayList<myLibrary>al=new ArrayList<>();
 						al=cmd.getAlist();
-						System.out.println(al.toString());
 						for(myLibrary m:al)
 						{
 							if(m.getCategory()==myLibrary.EDUCATION)
 							{
-								System.out.println("education");
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								node0.getChildren().add(ti);
 							}
 							else if(m.getCategory()==myLibrary.KPOP)
-							{	System.out.println("kop");
+							{	
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								node1.getChildren().add(ti);
 							}
 							else if(m.getCategory()==myLibrary.TRAVEL)
-							{	System.out.println("travel");
+							{	
 								TreeItem<String> ti = new TreeItem<String>(m.getTitle());
 								node2.getChildren().add(ti);
 							}
@@ -381,11 +379,11 @@ public class UIController implements Initializable, Runnable{
 					case Command.SHOWTUBE:
 					{
 						String address = cmd.getUrl(); //url;
-						System.out.println("쇼튜부 클라이언"+cmd.getUrl());
 						setfile(address);
 						Platform.runLater(()->{
 							mytube();
 						});
+						break;
 					}
 					case Command.JOIN:
 					{	
@@ -425,12 +423,16 @@ public class UIController implements Initializable, Runnable{
 							Label label = (Label) parent.lookup("#lb_join");
 							if(r)
 							{
+								user=cmd.getUser();
 								final Image mytube = new Image(getClass().getResourceAsStream("mytb.png"));
 								Platform.runLater(()->{
 								primaryStage.setScene(new Scene(pane));
 								primaryStage.setTitle("MyTube");
 								primaryStage.getIcons().addAll(mytube);
 								primaryStage.show();
+								Command c=new Command(Command.SHOWALLTUBE);
+								c.setUser(user);
+								sendData(c);
 								});
 							}
 							else
@@ -471,18 +473,21 @@ public class UIController implements Initializable, Runnable{
 		}
 	}
 	  public void setfile(String address){
-	    	File file = new File("C:/Users/user/workspace1");
-	    	try {
-				FileWriter fw = new FileWriter(file);
-				String str = "<html><body><iframe width='560' height='315' src='"+address+"?version=3&arnp;hl=ko_KR&arnp;rel=0&amp;autoplay=1;showinfo=0' frameborder='0' allowfullscreen></iframe></body></html>";
-				System.out.println("파일셋");
-				fw.write(str);
-				fw.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    }
-
+		  
+          File file = new File("d:/temp.html");
+          System.out.println("어드레스"+address);
+          String[] temp=new String[5];
+          temp=address.split("v=");
+          System.out.println("템프출력"+temp.length);
+          try {
+        	 System.out.println("파일롸이터");
+            FileWriter fw = new FileWriter(file);
+            String str = "<!DOCTYPE html><html><head><meta charset='utf-8'><title></title></head><body><iframe width='560' height='315' src='https://www.youtube.com/embed/"+temp[1]+"?version=3&arnp;hl=ko_KR&arnp;rel=0&amp;autoplay=1;showinfo=0' frameborder='0' allowfullscreen></iframe></body></html>";
+            fw.write(str);
+            fw.close();
+         } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+       }
 }
