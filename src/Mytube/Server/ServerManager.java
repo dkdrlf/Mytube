@@ -14,15 +14,13 @@ public class ServerManager implements Runnable {
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private database dao;
-	private String name;
 	Command resultCmd;
 
-	public ServerManager(Socket client, String name) {
+	public ServerManager(Socket client) {
 		try {
 			ois = new ObjectInputStream(client.getInputStream());
 			oos = new ObjectOutputStream(client.getOutputStream());
 			dao = new database();
-			this.name = name;
 			serverStart();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -69,6 +67,7 @@ public class ServerManager implements Runnable {
 				case Command.SHOWTUBE:
 					resultCmd = new Command(Command.SHOWTUBE);
 					resultCmd.setUrl(dao.showTube(cmd.getTitle()));
+					System.out.println("쇼튜브"+resultCmd.getUrl());
 					sendData(resultCmd);
 					break;
 				

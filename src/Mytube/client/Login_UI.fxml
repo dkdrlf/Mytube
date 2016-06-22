@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="309.0" prefWidth="251.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="78.0" layoutY="14.0" prefHeight="67.0" prefWidth="111.0" text="MyTube" textFill="#c63535">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="81.0" prefHeight="32.0" prefWidth="29.0" text="ID">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="152.0" prefHeight="32.0" prefWidth="102.0" text="PASSWORD">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tf_id" layoutX="14.0" layoutY="113.0" prefHeight="32.0" prefWidth="171.0" />
+      <TextField fx:id="tf_password" layoutX="14.0" layoutY="184.0" prefHeight="32.0" prefWidth="220.0" />
+      <Button fx:id="btn_login" layoutX="34.0" layoutY="255.0" mnemonicParsing="false" text="로그인">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="btn_join" layoutX="134.0" layoutY="255.0" mnemonicParsing="false" text="회원가입">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

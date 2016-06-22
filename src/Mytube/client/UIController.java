@@ -15,6 +15,7 @@ import com.sun.xml.internal.bind.v2.model.annotation.RuntimeAnnotationReader;
 
 import Mytube.command.Command;
 import Mytube.vo.myLibrary;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -56,7 +57,6 @@ public class UIController implements Initializable, Runnable{
 	@FXML Button btn_delete;
 	@FXML TextField tf_search;
 	@FXML Button btx_exit;
-	@FXML WebView web;
 	Button btn_insert;
 	Socket socket;
 	ObjectOutputStream oos;
@@ -69,6 +69,11 @@ public class UIController implements Initializable, Runnable{
 	TreeItem<String> node2;
 	TreeView<String > t;
 	Popup popup;
+	WebView web;
+	
+	public void setWeb(WebView web) {
+		this.web = web;
+	}
 	public TreeViewController getTreecontrol() {
 		return treecontrol;
 	}
@@ -110,7 +115,6 @@ public class UIController implements Initializable, Runnable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		
 	}
 	public void imageShowall(ActionEvent e)
 	{
@@ -125,32 +129,33 @@ public class UIController implements Initializable, Runnable{
 		
 		Command c=new Command(Command.SHOWALLTUBE);
 		sendData(c);
+		web.getEngine().load("https://www.youtube.com/");
 	}
 	
 	//트리마우스
 	private void handleMouseClicked(MouseEvent event) {
+	  
 		if(event.getClickCount()==2){ //더블클릭 처리 !!
-		    Node node = event.getPickResult().getIntersectedNode();
-		    // Accept clicks only on node cells, and not on empty spaces of the TreeView
-		    if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
-		    	if((String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="교육" &&
-		    			(String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="K-POP" &&
-		    					(String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="여행"){
-		        String name = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
-		        //System.out.println("Node click: " + name);
-		        
-		        Command c = new Command(Command.SHOWTUBE);
-		        c.setTitle(name);
-		        sendData(c);
-		    	}
-		    }
-			}
+	          Node node = event.getPickResult().getIntersectedNode();
+	          // Accept clicks only on node cells, and not on empty spaces of the TreeView
+	          if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
+	             if((String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="교육" &&
+	                   (String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="K-POP" &&
+	                         (String)((TreeItem)t.getSelectionModel().getSelectedItem()).getValue()!="여행"){
+	              String title = (String) ((TreeItem)t.getSelectionModel().getSelectedItem()).getValue();
+	              
+	              //System.out.println("Node click: " + name);
+	              //mytube();
+	              Command c = new Command(Command.SHOWTUBE);
+	              c.setTitle(title);
+	              sendData(c);
+	             }
+	          }
+	      }
 	}
 	public void mytube()
 	{
-		//웹
-		WebEngine engine=web.getEngine();
-		engine.load("file:///d:/temp.html");
+			web.getEngine().load("file:///D:/temp.html");
 	}
 	
 	public void store(ActionEvent e) throws IOException
@@ -373,8 +378,11 @@ public class UIController implements Initializable, Runnable{
 					case Command.SHOWTUBE:
 					{
 						String address = cmd.getUrl(); //url;
+						System.out.println("쇼튜부 클라이언"+cmd.getUrl());
 						setfile(address);
-						mytube();
+						Platform.runLater(()->{
+							mytube();
+						});
 					}
 					
 				}
@@ -398,17 +406,19 @@ public class UIController implements Initializable, Runnable{
 		}
 	}
 	  public void setfile(String address){
-	    	File file = new File("c:/temp.html");
-	    	try {
-				FileWriter fw = new FileWriter(file);
-				String str = "<html><body><iframe width='560' height='315' src='"+address+"' frameborder='0' allowfullscreen></iframe></body></html>";
-				fw.write(str);
-				fw.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-	    }
-
+          File file = new File("d:/temp.html");
+          String[] temp;
+          System.out.println("어드레스"+address);
+          temp=address.split("be/");
+          try {
+            FileWriter fw = new FileWriter(file);
+            String str = "<!DOCTYPE html><html><head><meta charset='utf-8'><title></title></head><body><iframe width='560' height='315' src='https://www.youtube.com/embed/"+temp[1]+"?version=3&arnp;hl=ko_KR&arnp;rel=0&amp;autoplay=1;showinfo=0' frameborder='0' allowfullscreen></iframe></body></html>";
+            System.out.println("파일셋");
+            fw.write(str);
+            fw.close();
+         } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+       }
 }
